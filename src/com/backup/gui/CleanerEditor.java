@@ -6,12 +6,15 @@ import com.backup.bean.Cleaner;
 import com.backup.io.SystemFileHandler;
 import com.backup.utils.FileUtils;
 import com.backup.utils.GUIUtils;
+import com.backup.utils.enums.MeasureUnitBytes;
+import com.backup.utils.enums.MeasureUnitTime;
 import java.awt.Desktop;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Level;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
@@ -27,8 +30,8 @@ public class CleanerEditor extends AbstractEntityEditor implements EntityEditor<
     public CleanerEditor() {
         initComponents();
         this.lsPatterns.setModel(new DefaultListModel());
-        this.spnLimit.setModel(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
-        this.spnRate.setModel(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+        this.spnLimit.setModel(new SpinnerNumberModel(0L, 0L, Long.MAX_VALUE, 1L));
+        this.spnRate.setModel(new SpinnerNumberModel(0L, 0L, Long.MAX_VALUE, 1L));
     }
 
     @SuppressWarnings("unchecked")
@@ -43,8 +46,6 @@ public class CleanerEditor extends AbstractEntityEditor implements EntityEditor<
         spnLimit = new javax.swing.JSpinner();
         spnRate = new javax.swing.JSpinner();
         lbRate = new javax.swing.JLabel();
-        lbBytes = new javax.swing.JLabel();
-        lbSeconds = new javax.swing.JLabel();
         pnPatterns = new javax.swing.JPanel();
         lbPattern = new javax.swing.JLabel();
         tfPattern = new javax.swing.JTextField();
@@ -59,6 +60,8 @@ public class CleanerEditor extends AbstractEntityEditor implements EntityEditor<
         btnCanceEdition = new javax.swing.JButton();
         btDelete = new javax.swing.JButton();
         lbMessage = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox();
+        jComboBox2 = new javax.swing.JComboBox();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder(MyApp.getAppText().getString("label.cleaning"))); // NOI18N
 
@@ -91,10 +94,6 @@ public class CleanerEditor extends AbstractEntityEditor implements EntityEditor<
         lbRate.setDisplayedMnemonic('r');
         lbRate.setLabelFor(spnRate);
         lbRate.setText(MyApp.getAppText().getString("label.rate")); // NOI18N
-
-        lbBytes.setText(MyApp.getAppText().getString("label.bytes")); // NOI18N
-
-        lbSeconds.setText(MyApp.getAppText().getString("label.seconds")); // NOI18N
 
         pnPatterns.setBorder(javax.swing.BorderFactory.createTitledBorder(MyApp.getAppText().getString("label.patterns"))); // NOI18N
 
@@ -244,6 +243,11 @@ public class CleanerEditor extends AbstractEntityEditor implements EntityEditor<
         lbMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbMessage.setText(" ");
 
+        jComboBox1.setModel(new DefaultComboBoxModel(MeasureUnitBytes.values()));
+
+        jComboBox2.setModel(new DefaultComboBoxModel(MeasureUnitTime.values())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -258,12 +262,8 @@ public class CleanerEditor extends AbstractEntityEditor implements EntityEditor<
                         .addComponent(pnButtons, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(lbTargetDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(15, 15, 15)
-                                .addComponent(tfTargetDirectory))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(lbRate, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -275,9 +275,14 @@ public class CleanerEditor extends AbstractEntityEditor implements EntityEditor<
                                         .addComponent(spnLimit)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lbSeconds, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lbBytes, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(403, 403, 403))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lbTargetDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(15, 15, 15)
+                                .addComponent(tfTargetDirectory)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addComponent(btSelectFile, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6))
                     .addGroup(layout.createSequentialGroup()
@@ -301,13 +306,13 @@ public class CleanerEditor extends AbstractEntityEditor implements EntityEditor<
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbLimit)
                     .addComponent(spnLimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbBytes))
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbRate)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(spnRate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lbSeconds)))
+                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(6, 6, 6)
                 .addComponent(ckbRecursive)
                 .addGap(18, 18, 18)
@@ -420,13 +425,13 @@ public class CleanerEditor extends AbstractEntityEditor implements EntityEditor<
     private javax.swing.JButton btnCanceEdition;
     private javax.swing.JButton btnDel;
     private javax.swing.JCheckBox ckbRecursive;
-    private javax.swing.JLabel lbBytes;
+    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel lbLimit;
     private javax.swing.JLabel lbMessage;
     private javax.swing.JLabel lbPattern;
     private javax.swing.JLabel lbPatternExplaination;
     private javax.swing.JLabel lbRate;
-    private javax.swing.JLabel lbSeconds;
     private javax.swing.JLabel lbTargetDirectory;
     private javax.swing.JList lsPatterns;
     private javax.swing.JPanel pnButtons;

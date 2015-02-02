@@ -96,6 +96,12 @@ public class CleanerTask extends TimerTask {
     }
 
     private void getFileList(HashSet<File> files, File targetDirectory) {
+        System.out.println(files);
+        System.out.println(targetDirectory);
+
+        if (targetDirectory.canRead() && targetDirectory.listFiles() != null) {
+            return;
+        }
         for (File fileTemp : targetDirectory.listFiles()) {
             if (fileTemp.isDirectory() && this.cleaner.isRecursive()) {
                 getFileList(files, fileTemp);
@@ -105,6 +111,7 @@ public class CleanerTask extends TimerTask {
                 }
             }
         }
+
     }
 
     private boolean isPattern(File fileTemp) {

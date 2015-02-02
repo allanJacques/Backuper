@@ -11,7 +11,7 @@ public enum PeriodPolitics {
     ONCE(MyApp.getAppText().getString("enum.once")),
     PERIODICALLY(MyApp.getAppText().getString("enum.periodically"));
 
-    public String description;
+    public final String description;
 
     PeriodPolitics(final String description) {
         this.description = description;
