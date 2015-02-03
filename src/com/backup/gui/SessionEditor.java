@@ -437,12 +437,19 @@ public class SessionEditor extends AbstractEntityEditor implements EntityEditor<
             return false;
         }
 
-        if ((!this.tfLocalFile.getText().isEmpty()) && !(new File(this.tfLocalFile.getText()).exists())) {
+        if ((!this.tfLocalFile.getText().isEmpty()) && (!(new File(this.tfLocalFile.getText()).exists()))) {
             Toolkit.getDefaultToolkit().beep();
             this.setMessage(MessageType.UNSUCCESSFULLY_MESSAGE, MyApp.getAppText().getString("messege.fileNotFound"));
             this.tfLocalFile.requestFocus();
             return false;
         }
+        if ((!this.tfLocalFile.getText().isEmpty()) && System.getProperty("os.name").contains("Linux") && this.tfLocalFile.getText().contains(" ")) {
+            Toolkit.getDefaultToolkit().beep();
+            this.setMessage(MessageType.UNSUCCESSFULLY_MESSAGE, MyApp.getAppText().getString("messege.pathCantContaisSpaces"));
+            this.tfLocalFile.requestFocus();
+            return false;
+        }
+
         return true;
     }
 
