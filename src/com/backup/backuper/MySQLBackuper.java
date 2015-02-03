@@ -25,7 +25,6 @@ public class MySQLBackuper extends DefaultBackuper {
             } else {
                 exec = new StringBuilder(this.scheduledBackup.getSession().getLocalFile().getPath().isEmpty() ? "mysqldump" : this.scheduledBackup.getSession().getLocalFile().toString());
             }
-
             exec.append(" -u");
             exec.append(scheduledBackup.getSession().getUser());
             exec.append(" -p");
