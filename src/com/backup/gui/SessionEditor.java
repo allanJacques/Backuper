@@ -362,6 +362,10 @@ public class SessionEditor extends AbstractEntityEditor implements EntityEditor<
         this.pfPassword.setText(null);
         this.setMessage(MessageType.CLEAN_MESSAGE, "");
         this.tfName.requestFocus();
+        File findMysqldump = FileUtils.findMysqldump();
+        if (findMysqldump != null) {
+            this.tfLocalFile.setText(findMysqldump.toString());
+        }
     }
 
     private Session getCreatedValue() {

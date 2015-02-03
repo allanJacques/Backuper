@@ -79,4 +79,21 @@ public class FileUtils {
         File file = new File(name);
         return (file.mkdirs() || (file.isDirectory() && file.exists()));
     }
+
+    public static File findMysqldump() {
+        if (System.getProperty("os.name").contains("Linux")) {
+            File tryFile = new File("/usr/bin/mysqldump");
+            if (tryFile.exists()) {
+                return tryFile;
+            }
+        } else if (System.getProperty("os.name").contains("Windows")) {
+
+        }
+        return null;
+    }
+
+    private static File find(final File path, final String regex) {
+
+        return null;
+    }
 }
