@@ -118,7 +118,7 @@ public class BackupFactory {
         MyApp.log(Level.INFO, "Scheduling cleaner for \"{0}\"...", cleaner.getTargetDirectory().toString());
         Timer timer = new Timer(cleaner.getTargetDirectory().toString(), true);
         CleanerTask task = new CleanerTask(cleaner);
-        timer.schedule(task, 0, cleaner.getRate() * 1000);
+        timer.schedule(task, 0, cleaner.getRate() * cleaner.getMeasureUnitTime().getTime());
         BackupFactory.cleanerTasks.add(task);
         BackupFactory.cleanerTimers.put(cleaner, timer);
     }
