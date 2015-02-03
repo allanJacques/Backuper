@@ -1,5 +1,7 @@
 package com.backup.bean;
 
+import com.backup.utils.enums.MeasureUnitBytes;
+import com.backup.utils.enums.MeasureUnitTime;
 import java.io.File;
 import java.util.List;
 
@@ -12,7 +14,9 @@ public class Cleaner {
     private boolean recursive;
     private List<String> patterns;
     private int capacityLimit;
+    private MeasureUnitBytes measureUnitBytes;
     private int rate;
+    private MeasureUnitTime measureUnitTime;
 
     public File getTargetDirectory() {
         return targetDirectory;
@@ -53,4 +57,21 @@ public class Cleaner {
     public void setRate(int rate) {
         this.rate = rate;
     }
+
+    public MeasureUnitBytes getMeasureUnitBytes() {
+        return measureUnitBytes;
+    }
+
+    public void setMeasureUnitBytes(MeasureUnitBytes measureUnitBytes) {
+        this.measureUnitBytes = measureUnitBytes;
+    }
+
+    public MeasureUnitTime getMeasureUnitTime() {
+        return measureUnitTime;
+    }
+
+    public void setMeasureUnitTime(MeasureUnitTime measureUnitTime) {
+        this.measureUnitTime = measureUnitTime;
+    }
+
 }

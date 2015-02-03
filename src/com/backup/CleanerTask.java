@@ -68,7 +68,7 @@ public class CleanerTask extends TimerTask {
         });
         for (File fTemp : files) {
             countBites += fTemp.length();
-            if (countBites > cleaner.getCapacityLimit()) {
+            if (countBites > (cleaner.getCapacityLimit() * cleaner.getMeasureUnitBytes().getBytes())) {
                 deleteFiles.add(fTemp);
             }
         }
@@ -76,11 +76,9 @@ public class CleanerTask extends TimerTask {
     }
 
     private void deleteFiles(ArrayList< File> deleteFiles) {
-        int deletedFileCount = 0;
         for (File fileTemp : deleteFiles) {
             if (!isPattern(fileTemp)) {
                 if (fileTemp.delete()) {
-                    deletedFileCount++;
                     MyApp.log(Level.INFO, this.sdf.format(new Date()) + "\t" + fileTemp + "   has deleted.");
                 } else {
                     MyApp.log(Level.INFO, this.sdf.format(new Date()) + "\t" + fileTemp + "   not has deleted.");
@@ -96,10 +94,8 @@ public class CleanerTask extends TimerTask {
     }
 
     private void getFileList(HashSet<File> files, File targetDirectory) {
-        System.out.println(files);
         System.out.println(targetDirectory);
-
-        if (targetDirectory.canRead() && targetDirectory.listFiles() != null) {
+        if (targetDirectory.canRead() && targetDirectory.listFiles() == null) {
             return;
         }
         for (File fileTemp : targetDirectory.listFiles()) {

@@ -60,8 +60,8 @@ public class CleanerEditor extends AbstractEntityEditor implements EntityEditor<
         btnCanceEdition = new javax.swing.JButton();
         btDelete = new javax.swing.JButton();
         lbMessage = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jComboBox2 = new javax.swing.JComboBox();
+        cbMeasureUnitByte = new javax.swing.JComboBox();
+        cbMeasureUnitTime = new javax.swing.JComboBox();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder(MyApp.getAppText().getString("label.cleaning"))); // NOI18N
 
@@ -243,9 +243,9 @@ public class CleanerEditor extends AbstractEntityEditor implements EntityEditor<
         lbMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbMessage.setText(" ");
 
-        jComboBox1.setModel(new DefaultComboBoxModel(MeasureUnitBytes.values()));
+        cbMeasureUnitByte.setModel(new DefaultComboBoxModel<MeasureUnitBytes>(MeasureUnitBytes.values()));
 
-        jComboBox2.setModel(new DefaultComboBoxModel(MeasureUnitTime.values())
+        cbMeasureUnitTime.setModel(new DefaultComboBoxModel(MeasureUnitTime.values())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -274,15 +274,14 @@ public class CleanerEditor extends AbstractEntityEditor implements EntityEditor<
                                         .addGap(15, 15, 15)
                                         .addComponent(spnLimit)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(403, 403, 403))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cbMeasureUnitByte, 0, 64, Short.MAX_VALUE)
+                                    .addComponent(cbMeasureUnitTime, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lbTargetDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(15, 15, 15)
-                                .addComponent(tfTargetDirectory)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                .addComponent(tfTargetDirectory)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btSelectFile, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6))
                     .addGroup(layout.createSequentialGroup()
@@ -306,13 +305,13 @@ public class CleanerEditor extends AbstractEntityEditor implements EntityEditor<
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbLimit)
                     .addComponent(spnLimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbMeasureUnitByte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbRate)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(spnRate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cbMeasureUnitTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(6, 6, 6)
                 .addComponent(ckbRecursive)
                 .addGap(18, 18, 18)
@@ -424,9 +423,9 @@ public class CleanerEditor extends AbstractEntityEditor implements EntityEditor<
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnCanceEdition;
     private javax.swing.JButton btnDel;
+    private javax.swing.JComboBox cbMeasureUnitByte;
+    private javax.swing.JComboBox cbMeasureUnitTime;
     private javax.swing.JCheckBox ckbRecursive;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel lbLimit;
     private javax.swing.JLabel lbMessage;
     private javax.swing.JLabel lbPattern;
@@ -492,8 +491,15 @@ public class CleanerEditor extends AbstractEntityEditor implements EntityEditor<
     private Cleaner getCreatedValue() {
         if (isValidValue()) {
             Cleaner newCleaner = new Cleaner();
-            newCleaner.setCapacityLimit(((Integer) this.spnLimit.getValue()));
-            newCleaner.setRate((Integer) this.spnRate.getValue());
+            try {
+                newCleaner.setCapacityLimit(((Double) this.spnLimit.getValue()).intValue());
+                newCleaner.setRate(((Double) this.spnRate.getValue()).intValue());
+            } catch (ClassCastException cce) {
+                newCleaner.setCapacityLimit(((Integer) this.spnLimit.getValue()));
+                newCleaner.setRate(((Integer) this.spnRate.getValue()));
+            }
+            newCleaner.setMeasureUnitBytes((MeasureUnitBytes) this.cbMeasureUnitByte.getModel().getSelectedItem());
+            newCleaner.setMeasureUnitTime((MeasureUnitTime) this.cbMeasureUnitTime.getModel().getSelectedItem());
             newCleaner.setRecursive(this.ckbRecursive.isSelected());
             newCleaner.setTargetDirectory(new File(this.tfTargetDirectory.getText()));
             newCleaner.setPatterns(new ArrayList<String>());
@@ -516,16 +522,28 @@ public class CleanerEditor extends AbstractEntityEditor implements EntityEditor<
             this.tfTargetDirectory.requestFocus();
             return false;
         }
-
-        if ((((Integer) this.spnLimit.getValue())) < 1) {
-            this.setMessage(MessageType.UNSUCCESSFULLY_MESSAGE, MyApp.getFormattedText("message.positiveNumberRequired"));
-            this.spnLimit.requestFocus();
-            return false;
-        }
-        if ((((Integer) this.spnRate.getValue())) < 1) {
-            this.setMessage(MessageType.UNSUCCESSFULLY_MESSAGE, MyApp.getFormattedText("message.positiveNumberRequired"));
-            this.spnRate.requestFocus();
-            return false;
+        try {
+            if ((((Double) this.spnLimit.getValue())) < 0.0) {
+                this.setMessage(MessageType.UNSUCCESSFULLY_MESSAGE, MyApp.getFormattedText("message.positiveNumberRequired"));
+                this.spnLimit.requestFocus();
+                return false;
+            }
+            if ((((Double) this.spnRate.getValue())) < 0.0) {
+                this.setMessage(MessageType.UNSUCCESSFULLY_MESSAGE, MyApp.getFormattedText("message.positiveNumberRequired"));
+                this.spnRate.requestFocus();
+                return false;
+            }
+        } catch (ClassCastException cce) {
+            if ((((Integer) this.spnLimit.getValue())) < 0.0) {
+                this.setMessage(MessageType.UNSUCCESSFULLY_MESSAGE, MyApp.getFormattedText("message.positiveNumberRequired"));
+                this.spnLimit.requestFocus();
+                return false;
+            }
+            if ((((Integer) this.spnRate.getValue())) < 0.0) {
+                this.setMessage(MessageType.UNSUCCESSFULLY_MESSAGE, MyApp.getFormattedText("message.positiveNumberRequired"));
+                this.spnRate.requestFocus();
+                return false;
+            }
         }
 
         return true;
