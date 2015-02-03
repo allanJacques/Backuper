@@ -465,6 +465,8 @@ public class CleanerEditor extends AbstractEntityEditor implements EntityEditor<
         this.spnRate.setValue(entity.getRate());
         this.tfPattern.setText(null);
         this.ckbRecursive.setSelected(entity.isRecursive());
+        this.cbMeasureUnitByte.setSelectedItem(entity.getMeasureUnitBytes());
+        this.cbMeasureUnitTime.setSelectedItem(entity.getMeasureUnitTime());
 
         DefaultListModel model = (DefaultListModel) this.lsPatterns.getModel();
         model.removeAllElements();
