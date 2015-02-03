@@ -449,7 +449,6 @@ public class SessionEditor extends AbstractEntityEditor implements EntityEditor<
             this.tfLocalFile.requestFocus();
             return false;
         }
-
         return true;
     }
 
