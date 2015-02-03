@@ -94,8 +94,7 @@ public class CleanerTask extends TimerTask {
     }
 
     private void getFileList(HashSet<File> files, File targetDirectory) {
-        System.out.println(targetDirectory);
-        if (targetDirectory.canRead() && targetDirectory.listFiles() == null) {
+        if (targetDirectory.listFiles() == null) {
             return;
         }
         for (File fileTemp : targetDirectory.listFiles()) {

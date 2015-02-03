@@ -3,6 +3,7 @@ package com.backup.utils;
 import com.backup.app.MyApp;
 import com.backup.bean.ScheduledBackup;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import javax.swing.JFileChooser;
@@ -87,13 +88,29 @@ public class FileUtils {
                 return tryFile;
             }
         } else if (System.getProperty("os.name").contains("Windows")) {
-
+            ArrayList<File> files = new ArrayList<File>();
+            find(new File("C:\\Program Files\\MySQL"), ".*mysqldump.exe", files);
+            if (!files.isEmpty()) {
+                return files.get(0);
+            }
         }
         return null;
     }
 
-    private static File find(final File path, final String regex) {
-
-        return null;
+    private static void find(final File path, final String regex, final ArrayList<File> files) {
+        if (!path.exists() || path.listFiles() == null) {
+            return;
+        }
+        for (File fileTemp : path.listFiles()) {
+            System.out.println(fileTemp);
+            if (fileTemp.isDirectory()) {
+                find(fileTemp, regex, files);
+            } else {
+                if (!fileTemp.isDirectory() && fileTemp.toString().matches(regex)) {
+                    files.add(fileTemp);
+                    break;
+                }
+            }
+        }
     }
 }
