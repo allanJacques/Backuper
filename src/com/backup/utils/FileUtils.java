@@ -102,7 +102,6 @@ public class FileUtils {
             return;
         }
         for (File fileTemp : path.listFiles()) {
-            System.out.println(fileTemp);
             if (fileTemp.isDirectory()) {
                 find(fileTemp, regex, files);
             } else {
