@@ -19,7 +19,7 @@ public class MySQLBackuper extends DefaultBackuper {
     @Override
     public Process doBackup() throws IOException {
         try {
-            StringBuilder exec = new StringBuilder(this.scheduledBackup.getSession().getLocalFile().getPath().isEmpty() ? "mysqldump" : this.scheduledBackup.getSession().getLocalFile().toString());
+            StringBuilder exec = new StringBuilder(this.scheduledBackup.getSession().getLocalFile().getPath().isEmpty() ? "mysqldump" : "\"" + this.scheduledBackup.getSession().getLocalFile().toString() + "\"");
             exec.append(" -u");
             exec.append(scheduledBackup.getSession().getUser());
             exec.append(" -p");
